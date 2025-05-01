@@ -1,149 +1,196 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import styles from './TransporterDashboard.module.css';
+import { 
+  FaTruck, FaBox, FaClock, FaRupeeSign, FaSearch,
+  FaRoute, FaGasPump, FaStopwatch, FaMoneyBillWave
+} from 'react-icons/fa';
+
+// Mock data for demonstration
+const mockParcels = [
+  {
+    id: 1,
+    pickup: { lat: 19.0760, lng: 72.8777, name: "Mumbai" },
+    drop: { lat: 28.6139, lng: 77.2090, name: "Delhi" },
+    weight: "500kg",
+    deadline: "2024-03-25",
+    status: "In Progress",
+    progress: 65
+  },
+  {
+    id: 2,
+    pickup: { lat: 12.9716, lng: 77.5946, name: "Bangalore" },
+    drop: { lat: 17.3850, lng: 78.4867, name: "Hyderabad" },
+    weight: "300kg",
+    deadline: "2024-03-24",
+    status: "Pending",
+    progress: 0
+  },
+  {
+    id: 3,
+    pickup: { lat: 22.5726, lng: 88.3639, name: "Kolkata" },
+    drop: { lat: 13.0827, lng: 80.2707, name: "Chennai" },
+    weight: "450kg",
+    deadline: "2024-03-26",
+    status: "Delivered",
+    progress: 100
+  }
+];
 
 const TransporterDashboard = () => {
-  const navigate = useNavigate();
-  const [parcels, setParcels] = useState([
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('deadline');
+  const [parcels, setParcels] = useState(mockParcels);
+
+  // Filter and sort parcels
+  const filteredParcels = parcels.filter(parcel => 
+    parcel.pickup.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    parcel.drop.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const summaryCards = [
     {
-      id: 1,
-      pickupLocation: 'Mumbai',
-      dropLocation: 'Delhi',
-      weight: 500,
-      date: '2024-03-25',
-      price: 5000
+      title: "Parcels to Pick Up",
+      value: parcels.filter(p => p.status === "Pending").length,
+      icon: <FaTruck />,
+      color: "blue"
     },
     {
-      id: 2,
-      pickupLocation: 'Delhi',
-      dropLocation: 'Kolkata',
-      weight: 300,
-      date: '2024-03-26',
-      price: 3000
+      title: "Parcels to Drop",
+      value: parcels.filter(p => p.status === "In Progress").length,
+      icon: <FaBox />,
+      color: "green"
     },
     {
-      id: 3,
-      pickupLocation: 'Bangalore',
-      dropLocation: 'Chennai',
-      weight: 200,
-      date: '2024-03-27',
-      price: 2000
+      title: "Est. Completion",
+      value: "4.5 Hours",
+      icon: <FaClock />,
+      color: "orange"
+    },
+    {
+      title: "Expected Profit",
+      value: "₹15,000",
+      icon: <FaRupeeSign />,
+      color: "purple"
     }
-  ]);
+  ];
 
-  const [suggestedRoute, setSuggestedRoute] = useState(null);
-
-  useEffect(() => {
-    const calculateRoute = () => {
-      const totalWeight = parcels.reduce((sum, parcel) => sum + parcel.weight, 0);
-      const totalProfit = parcels.reduce((sum, parcel) => sum + parcel.price, 0);
-      
-      const route = parcels
-        .sort((a, b) => b.weight - a.weight)
-        .map(parcel => ({
-          from: parcel.pickupLocation,
-          to: parcel.dropLocation,
-          weight: parcel.weight
-        }));
-
-      setSuggestedRoute({
-        route,
-        totalWeight,
-        estimatedProfit: totalProfit
-      });
-    };
-
-    calculateRoute();
-  }, [parcels]);
+  const routeStats = [
+    { icon: <FaRoute />, label: "Total Distance", value: "1,250 km" },
+    { icon: <FaGasPump />, label: "Fuel Cost", value: "₹8,500" },
+    { icon: <FaStopwatch />, label: "Est. Time", value: "16 hours" },
+    { icon: <FaMoneyBillWave />, label: "Net Earnings", value: "₹15,000" }
+  ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Transporter Dashboard</h1>
+    <div className={styles.dashboard}>
+      <div className={styles.leftPanel}>
+        <header className={styles.header}>
+          <h1 className={styles.title}>Welcome, Transporter 👋</h1>
+          <p className={styles.subtitle}>Here's your delivery overview for today!</p>
+        </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Assigned Parcels Section */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-800">Assigned Parcels</h2>
-              <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                {parcels.length} Parcels
-              </span>
-            </div>
-            
-            <div className="space-y-4">
-              {parcels.map(parcel => (
-                <div key={parcel.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-200">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm text-gray-500">Pickup</p>
-                      <p className="font-medium">{parcel.pickupLocation}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Drop</p>
-                      <p className="font-medium">{parcel.dropLocation}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Weight</p>
-                      <p className="font-medium">{parcel.weight} kg</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Price</p>
-                      <p className="font-medium">₹{parcel.price}</p>
-                    </div>
-                  </div>
-                  <div className="mt-3 pt-3 border-t border-gray-100">
-                    <p className="text-sm text-gray-500">Date</p>
-                    <p className="font-medium">{parcel.date}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className={styles.searchBar}>
+          <FaSearch className={styles.searchIcon} />
+          <input
+            type="text"
+            placeholder="Search by location..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <select 
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className={styles.sortSelect}
+          >
+            <option value="deadline">Sort by Deadline</option>
+            <option value="weight">Sort by Weight</option>
+            <option value="status">Sort by Status</option>
+          </select>
+        </div>
 
-          {/* Route Optimization Section */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-6">Route Optimization</h2>
-            {suggestedRoute && (
-              <div>
-                <div className="grid grid-cols-3 gap-4 mb-6">
-                  <div className="bg-blue-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-500">Total Parcels</p>
-                    <p className="text-xl font-bold text-blue-600">{parcels.length}</p>
-                  </div>
-                  <div className="bg-green-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-500">Total Weight</p>
-                    <p className="text-xl font-bold text-green-600">{suggestedRoute.totalWeight} kg</p>
-                  </div>
-                  <div className="bg-purple-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-500">Estimated Profit</p>
-                    <p className="text-xl font-bold text-purple-600">₹{suggestedRoute.estimatedProfit}</p>
-                  </div>
-                </div>
-                
-                <div className="mt-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Suggested Route</h3>
-                  <div className="space-y-3">
-                    {suggestedRoute.route.map((step, index) => (
-                      <div key={index} className="flex items-center bg-gray-50 p-3 rounded-lg">
-                        <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center mr-3">
-                          {index + 1}
-                        </span>
-                        <div className="flex-1">
-                          <p className="font-medium">
-                            {step.from} → {step.to}
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            Weight: {step.weight} kg
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+        <div className={styles.summaryCards}>
+          {summaryCards.map((card, index) => (
+            <div 
+              key={index} 
+              className={`${styles.card} ${styles[card.color]}`}
+            >
+              <div className={styles.cardIcon}>{card.icon}</div>
+              <div className={styles.cardContent}>
+                <h3>{card.title}</h3>
+                <p>{card.value}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className={styles.routeOptimization}>
+          <h2>Smart Route Suggestion</h2>
+          <div className={styles.routeStats}>
+            {routeStats.map((stat, index) => (
+              <div key={index} className={styles.statItem}>
+                <div className={styles.statIcon}>{stat.icon}</div>
+                <div className={styles.statInfo}>
+                  <span className={styles.statLabel}>{stat.label}</span>
+                  <span className={styles.statValue}>{stat.value}</span>
                 </div>
               </div>
-            )}
+            ))}
           </div>
         </div>
+
+        <div className={styles.taskList}>
+          <h2>Today's Tasks</h2>
+          <div className={styles.tasks}>
+            {filteredParcels.map(parcel => (
+              <div key={parcel.id} className={styles.taskItem}>
+                <div className={styles.taskHeader}>
+                  <div className={styles.locations}>
+                    <span>{parcel.pickup.name}</span>
+                    <FaTruck className={styles.arrow} />
+                    <span>{parcel.drop.name}</span>
+                  </div>
+                  <span className={`${styles.status} ${styles[parcel.status.toLowerCase()]}`}>
+                    {parcel.status}
+                  </span>
+                </div>
+                <div className={styles.taskDetails}>
+                  <span>Weight: {parcel.weight}</span>
+                  <span>Deadline: {parcel.deadline}</span>
+                </div>
+                <div className={styles.progressBar}>
+                  <div 
+                    className={styles.progress}
+                    style={{ width: `${parcel.progress}%` }}
+                  ></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.rightPanel}>
+        <MapContainer
+          center={[20.5937, 78.9629]}
+          zoom={5}
+          className={styles.map}
+        >
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          {parcels.map(parcel => (
+            <React.Fragment key={parcel.id}>
+              <Marker position={[parcel.pickup.lat, parcel.pickup.lng]} />
+              <Marker position={[parcel.drop.lat, parcel.drop.lng]} />
+              <Polyline 
+                positions={[
+                  [parcel.pickup.lat, parcel.pickup.lng],
+                  [parcel.drop.lat, parcel.drop.lng]
+                ]}
+              />
+            </React.Fragment>
+          ))}
+        </MapContainer>
       </div>
     </div>
   );

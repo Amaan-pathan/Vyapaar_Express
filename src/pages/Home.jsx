@@ -10,7 +10,7 @@ const Home = () => {
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>
-            Revolutionize Your Logistics with VyapaarExpress
+            Revolutionize Your Logistics with Vyapaar Express
           </h1>
           <p className={styles.heroSubtitle}>
             India's most advanced platform connecting vendors with transporters for seamless logistics operations
