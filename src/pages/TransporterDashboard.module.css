@@ -1,23 +1,25 @@
 /* Dashboard Layout */
 .dashboard {
+  padding: 90px 2rem 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  padding: 2rem;
+  gap: 2.5rem;
   min-height: 100vh;
   background: #f8f9fa;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
 .leftPanel {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 2.5rem;
 }
 
 .rightPanel {
   position: sticky;
-  top: 2rem;
-  height: calc(100vh - 4rem);
+  top: 90px;
+  height: calc(100vh - 110px);
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -25,38 +27,46 @@
 
 /* Header Styles */
 .header {
-  padding: 1rem 0;
+  padding: 1.5rem 0;
 }
 
 .title {
   font-size: 2.5rem;
   font-weight: 800;
   color: #1a237e;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   animation: fadeInUp 0.6s ease-out;
 }
 
 .subtitle {
   font-size: 1.2rem;
   color: #6b7280;
+  line-height: 1.6;
 }
 
 /* Search Bar */
 .searchBar {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   background: white;
-  padding: 1rem;
+  padding: 1.25rem;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin: 1rem 0;
 }
 
 .searchBar input {
   flex: 1;
-  border: none;
-  padding: 0.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
   font-size: 1rem;
   outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.searchBar input:focus {
+  border-color: #1a237e;
 }
 
 .searchIcon {
@@ -75,13 +85,14 @@
 /* Summary Cards */
 .summaryCards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+  margin: 1rem 0;
 }
 
 .card {
   background: white;
-  padding: 1.5rem;
+  padding: 2rem;
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -144,9 +155,10 @@
 /* Route Optimization */
 .routeOptimization {
   background: white;
-  padding: 2rem;
+  padding: 2.5rem;
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  margin: 1rem 0;
 }
 
 .routeOptimization h2 {
@@ -157,8 +169,9 @@
 
 .routeStats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
 }
 
 .statItem {
@@ -191,9 +204,10 @@
 /* Task List */
 .taskList {
   background: white;
-  padding: 2rem;
+  padding: 2.5rem;
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  margin: 1rem 0;
 }
 
 .taskList h2 {
@@ -205,14 +219,16 @@
 .tasks {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+  margin-top: 2rem;
 }
 
 .taskItem {
-  padding: 1.5rem;
+  padding: 1.75rem;
   border-radius: 12px;
   background: #f8f9fa;
   transition: transform 0.3s ease;
+  border: 1px solid #e5e7eb;
 }
 
 .taskItem:hover {
@@ -304,26 +320,30 @@
 @media (max-width: 1024px) {
   .dashboard {
     grid-template-columns: 1fr;
+    padding: 80px 1.5rem 1.5rem;
   }
 
   .rightPanel {
     position: relative;
     height: 500px;
     top: 0;
+    margin: 1rem 0;
   }
 }
 
 @media (max-width: 768px) {
   .dashboard {
-    padding: 1rem;
+    padding: 80px 1rem 1rem;
   }
 
   .summaryCards {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
   .routeStats {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
   .taskHeader {
@@ -332,7 +352,7 @@
     gap: 1rem;
   }
 
-  .status {
-    align-self: flex-start;
+  .title {
+    font-size: 2rem;
   }
 } 

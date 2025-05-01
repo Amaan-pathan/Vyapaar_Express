@@ -1,33 +1,33 @@
 .navbar {
-  position: sticky;
+  background: #1a237e;
+  padding: 1rem 0;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.container {
+.navContainer {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem 2rem;
+  padding: 0 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.brand {
+.logo {
+  color: white;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1a73e8;
   text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  transition: opacity 0.3s ease;
 }
 
-.brand:hover {
-  color: #1557b0;
+.logo:hover {
+  opacity: 0.9;
 }
 
 .navLinks {
@@ -37,81 +37,40 @@
 }
 
 .navLink {
+  color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
-  color: #4a5568;
   font-weight: 500;
-  padding: 0.5rem 0;
-  position: relative;
-  transition: color 0.2s ease;
-}
-
-.navLink::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: #1a73e8;
-  transition: width 0.2s ease;
-}
-
-.navLink:hover {
-  color: #1a73e8;
-}
-
-.navLink:hover::after,
-.navLink.active::after {
-  width: 100%;
-}
-
-.navLink.active {
-  color: #1a73e8;
-}
-
-.mobileMenuBtn {
-  display: none;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.5rem;
-  color: #4a5568;
+  font-size: 1rem;
+  font-family: inherit;
 }
 
-.mobileMenuBtn:hover {
-  color: #1a73e8;
+.navLink:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 @media (max-width: 768px) {
-  .navLinks {
-    display: none;
-  }
-
-  .mobileMenuBtn {
-    display: block;
-  }
-
-  .navLinks.open {
-    display: flex;
+  .navContainer {
     flex-direction: column;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: white;
+    gap: 1rem;
     padding: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    animation: slideDown 0.3s ease;
   }
-}
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
+  .navLinks {
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    text-align: center;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .navLink {
+    width: 100%;
+    text-align: center;
   }
 } 
